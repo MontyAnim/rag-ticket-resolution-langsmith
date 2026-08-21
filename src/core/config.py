@@ -12,6 +12,10 @@ class Settings(BaseSettings):
     # Database config
     DATABASE_URL: str = "postgresql+asyncpg://postgres:postgres@localhost:5432/rag_ops"
     
+    # Vector DB config
+    QDRANT_URL: str = "http://localhost:6333"
+    QDRANT_API_KEY: str | None = None
+    
     model_config = SettingsConfigDict(
         case_sensitive=True,
         env_file=".env",

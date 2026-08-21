@@ -1,8 +1,9 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from starlette.exceptions import HTTPException as StarletteHTTPException
 from src.core.config import settings
+from src.core.vector_db import qdrant_client
 
 app = FastAPI(
     title=settings.PROJECT_NAME,
@@ -35,6 +36,10 @@ async def global_exception_handler(request, exc):
         content={"detail": "Internal Server Error"}
     )
 
-@app.get("/")
-def health_check():
-    return {"status": "ok", "app": settings.PROJECT_NAME}
+@app.get("/health")
+async def health_check():
+    try:
+        await qdrant_client.get_collections()
+        return {"status": "ok", "app": settings.PROJECT_NAME, "qdrant": "connected"}
+    except Exception as e:
+        raise HTTPException(status_code=503, detail=f"Qdrant connection failed: {e}")

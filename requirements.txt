@@ -13,3 +13,4 @@ langchain-openai
 langchain-groq
 langchain-huggingface
 sentence-transformers
+langsmith

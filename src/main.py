@@ -10,7 +10,11 @@ from fastapi.responses import JSONResponse
 from starlette.exceptions import HTTPException as StarletteHTTPException
 from src.core.config import settings
 from src.core.vector_db import qdrant_client
+from src.core.telemetry import setup_telemetry
 from src.api.routes.tickets import router as tickets_router
+
+# Initialize telemetry globally
+setup_telemetry()
 
 app = FastAPI(
     title=settings.PROJECT_NAME,

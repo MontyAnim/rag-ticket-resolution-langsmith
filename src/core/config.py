@@ -20,6 +20,11 @@ class Settings(BaseSettings):
     OPENAI_API_KEY: str | None = None
     GROQ_API_KEY: str | None = None
     
+    # LangSmith Observability
+    LANGCHAIN_TRACING_V2: str = "false"
+    LANGCHAIN_API_KEY: str | None = None
+    LANGCHAIN_PROJECT: str = "rag-ticket-resolution"
+    
     model_config = SettingsConfigDict(
         case_sensitive=True,
         env_file=".env",

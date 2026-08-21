@@ -16,8 +16,9 @@ class Settings(BaseSettings):
     QDRANT_URL: str = "http://localhost:6333"
     QDRANT_API_KEY: str | None = None
     
-    # LLM
+    # LLMs
     OPENAI_API_KEY: str | None = None
+    GROQ_API_KEY: str | None = None
     
     model_config = SettingsConfigDict(
         case_sensitive=True,

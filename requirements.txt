@@ -10,3 +10,4 @@ langchain-core
 langgraph-checkpoint-postgres
 psycopg[binary,pool]
 langchain-openai
+langchain-groq

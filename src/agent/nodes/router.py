@@ -1,7 +1,7 @@
 from typing import Literal
 from pydantic import BaseModel, Field
-from langchain_openai import ChatOpenAI
 from src.agent.state import AgentState
+from src.agent.llm import get_llm
 from src.core.config import settings
 
 class IntentClassification(BaseModel):
@@ -21,11 +21,7 @@ def router_node(state: AgentState) -> dict:
         return {"current_intent": "escalate"}  # Fallback
 
     # Initialize the LLM with structured output to guarantee matching literal values
-    llm = ChatOpenAI(
-        model="gpt-4o-mini",
-        api_key=settings.OPENAI_API_KEY,
-        temperature=0.0
-    )
+    llm = get_llm(temperature=0.0)
     structured_llm = llm.with_structured_output(IntentClassification)
     
     # Classify the intent based on the messages

@@ -11,3 +11,5 @@ langgraph-checkpoint-postgres
 psycopg[binary,pool]
 langchain-openai
 langchain-groq
+langchain-huggingface
+sentence-transformers

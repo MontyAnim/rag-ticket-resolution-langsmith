@@ -12,9 +12,9 @@ def get_llm(temperature: float = 0.0):
     otherwise falls back to OpenAI.
     """
     if settings.GROQ_API_KEY:
-        logger.info("Initializing Groq LLM (llama-3.1-8b-instant)")
+        logger.info("Initializing Groq LLM (openai/gpt-oss-120b)")
         return ChatGroq(
-            model="llama-3.1-8b-instant",
+            model="openai/gpt-oss-120b",
             api_key=settings.GROQ_API_KEY,
             temperature=temperature
         )

@@ -1,9 +1,16 @@
+import sys
+import asyncio
+
+if sys.platform == "win32":
+    asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
+
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from starlette.exceptions import HTTPException as StarletteHTTPException
 from src.core.config import settings
 from src.core.vector_db import qdrant_client
+from src.api.routes.tickets import router as tickets_router
 
 app = FastAPI(
     title=settings.PROJECT_NAME,
@@ -43,3 +50,7 @@ async def health_check():
         return {"status": "ok", "app": settings.PROJECT_NAME, "qdrant": "connected"}
     except Exception as e:
         raise HTTPException(status_code=503, detail=f"Qdrant connection failed: {e}")
+
+# Include API Routers
+app.include_router(tickets_router, prefix=settings.API_V1_STR)
+

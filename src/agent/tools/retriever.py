@@ -31,18 +31,18 @@ async def retrieve_knowledge(query: str, config: RunnableConfig) -> str:
         ]
     )
     
-    search_results = await qdrant_client.search(
+    search_results = await qdrant_client.query_points(
         collection_name="knowledge_base",
-        query_vector=query_vector,
+        query=query_vector,
         query_filter=tenant_filter,
         limit=3
     )
     
-    if not search_results:
+    if not search_results.points:
         return "No relevant documentation found in the knowledge base."
         
     formatted_docs = []
-    for hit in search_results:
+    for hit in search_results.points:
         payload = hit.payload or {}
         content = payload.get("content", "")
         source = payload.get("source", "Unknown")

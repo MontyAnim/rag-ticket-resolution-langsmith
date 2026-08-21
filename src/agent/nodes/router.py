@@ -8,7 +8,12 @@ class IntentClassification(BaseModel):
     """Schema for routing intents."""
     intent: Literal["technical", "billing", "escalate"] = Field(
         ...,
-        description="Classify the user's latest message intent."
+        description=(
+            "Classify the user's latest message intent. "
+            "'technical' for questions about software, databases, configuration, errors, or troubleshooting. "
+            "'billing' for questions about refunds, payments, invoices, or subscriptions. "
+            "'escalate' for general greetings, non-support chats, complaints, or explicit requests for a human."
+        )
     )
 
 def router_node(state: AgentState) -> dict:
@@ -24,8 +29,12 @@ def router_node(state: AgentState) -> dict:
     llm = get_llm(temperature=0.0)
     structured_llm = llm.with_structured_output(IntentClassification)
     
-    # Classify the intent based on the messages
-    result = structured_llm.invoke(messages)
-    
-    # Return the dictionary to be merged into AgentState
-    return {"current_intent": result.intent}
+    try:
+        # Classify the intent based on the messages
+        result = structured_llm.invoke(messages)
+        return {"current_intent": result.intent}
+    except Exception as e:
+        # Fallback if the LLM refuses to use the tool or crashes
+        import logging
+        logging.getLogger(__name__).warning(f"Router LLM failed, defaulting to 'escalate': {e}")
+        return {"current_intent": "escalate"}

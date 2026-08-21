@@ -9,6 +9,9 @@ class Settings(BaseSettings):
     # CORS config
     BACKEND_CORS_ORIGINS: List[str] = ["*"]
     
+    # Database config
+    DATABASE_URL: str = "postgresql+asyncpg://postgres:postgres@localhost:5432/rag_ops"
+    
     model_config = SettingsConfigDict(
         case_sensitive=True,
         env_file=".env",

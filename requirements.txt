@@ -7,3 +7,5 @@ alembic
 qdrant-client
 langgraph
 langchain-core
+langgraph-checkpoint-postgres
+psycopg[binary,pool]

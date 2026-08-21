@@ -30,13 +30,22 @@ async def process_ticket(payload: TicketRequest, db: AsyncSession = Depends(get_
     """
     thread_id = payload.thread_id or f"thread_{uuid.uuid4().hex[:8]}"
     
-    # Configure graph runtime parameters
+    # Configure graph runtime parameters and LangSmith telemetry
     config = {
         "configurable": {
             "thread_id": thread_id,
             "tenant_id": payload.tenant_id,
             "user_id": payload.user_id
-        }
+        },
+        "metadata": {
+            "tenant_id": payload.tenant_id,
+            "user_id": payload.user_id,
+            "thread_id": thread_id
+        },
+        "tags": [
+            f"tenant:{payload.tenant_id}",
+            "source:api"
+        ]
     }
     
     input_state = {

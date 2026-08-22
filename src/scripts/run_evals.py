@@ -3,7 +3,7 @@ import argparse
 from langsmith import Client, aevaluate
 from langchain_core.messages import HumanMessage
 from src.agent.graph import get_agent_graph
-from src.evals.heuristic import latency_evaluator, tokens_evaluator
+from src.evals.heuristic import latency_evaluator, tokens_evaluator, json_format_evaluator, tool_invocation_evaluator
 from src.evals.llm_judge import precision_evaluator, faithfulness_evaluator, tone_and_relevance_evaluator
 
 async def run_target(inputs: dict) -> dict:
@@ -47,7 +47,9 @@ async def main():
         tokens_evaluator,
         precision_evaluator,
         faithfulness_evaluator,
-        tone_and_relevance_evaluator
+        tone_and_relevance_evaluator,
+        json_format_evaluator,
+        tool_invocation_evaluator
     ]
     
     print(f"Starting evaluation on dataset: '{args.dataset}'")

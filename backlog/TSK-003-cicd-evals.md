@@ -1,7 +1,7 @@
 # Task: Automatización del Pipeline de Evaluación CI/CD
 
 **ID:** `TSK-003`
-**Status:** `Todo`
+**Status:** `Done`
 **Gitflow Branch:** `feature/TSK-003-cicd-evals`
 **Dependencies:** `TSK-001`
 
@@ -13,14 +13,14 @@ El código actual solo posee un script manual (`scratch_eval_test.py`) con evalu
 ---
 
 ## Acceptance Criteria
-- [ ] Se crea un pipeline de evaluación `src/scripts/run_evals.py` que instancia un cliente de LangSmith y usa el método `aevaluate()`.
-- [ ] Se añaden evaluadores heurísticos deterministas en `src/evals/` (ej. verificador de latencia máxima de respuesta o completitud de llaves JSON).
-- [ ] El pipeline es capaz de leer un dataset de LangSmith y procesarlo concurrentemente.
+- [x] Se crea un pipeline de evaluación `src/scripts/run_evals.py` que instancia un cliente de LangSmith y usa el método `aevaluate()`.
+- [x] Se añaden evaluadores heurísticos deterministas en `src/evals/` (ej. verificador de latencia máxima de respuesta o completitud de llaves JSON).
+- [x] El pipeline es capaz de leer un dataset de LangSmith y procesarlo concurrentemente.
 
 ---
 
 ## Definition of Done (DoD)
-- [ ] Code meets acceptance criteria.
-- [ ] All code and artifacts are written in English (per `language-policy.md`).
-- [ ] Walkthrough artifact generated (if applicable).
-- [ ] Backend QA or Tests passed (if applicable).
+- [x] Code meets acceptance criteria.
+- [x] All code and artifacts are written in English (per `language-policy.md`).
+- [x] Walkthrough artifact generated (if applicable).
+- [x] Backend QA or Tests passed (if applicable).

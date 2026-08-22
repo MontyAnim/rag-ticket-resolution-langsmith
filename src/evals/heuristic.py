@@ -27,10 +27,14 @@ def tokens_evaluator(run: Run, example: Example) -> Dict[str, Any]:
     Evaluates if the total token count is less than MAX_TOKENS.
     """
     tokens = 0
-    if run.prompt_tokens is not None and run.completion_tokens is not None:
-        tokens = run.prompt_tokens + run.completion_tokens
-    elif run.total_tokens is not None:
-        tokens = run.total_tokens
+    prompt_tokens = getattr(run, "prompt_tokens", None)
+    completion_tokens = getattr(run, "completion_tokens", None)
+    total_tokens = getattr(run, "total_tokens", None)
+
+    if prompt_tokens is not None and completion_tokens is not None:
+        tokens = prompt_tokens + completion_tokens
+    elif total_tokens is not None:
+        tokens = total_tokens
     
     score = 1.0 if tokens < MAX_TOKENS else 0.0
     return {

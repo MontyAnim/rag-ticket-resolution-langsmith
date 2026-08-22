@@ -2,6 +2,8 @@ import logging
 from langchainhub import Client
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.messages import SystemMessage
+from langchain_core.load import loads
+from cachetools import TTLCache, cached
 from src.core.config import settings
 
 logger = logging.getLogger(__name__)
@@ -14,6 +16,9 @@ FALLBACK_SYSTEM_PROMPT = (
     "Always be polite, concise, and provide accurate answers based on the retrieved context."
 )
 
+prompt_cache = TTLCache(maxsize=10, ttl=300)
+
+@cached(cache=prompt_cache)
 def get_react_prompt() -> ChatPromptTemplate:
     """
     Dynamically pulls the prompt template from LangSmith Hub.
@@ -26,6 +31,8 @@ def get_react_prompt() -> ChatPromptTemplate:
         logger.info(f"Attempting to pull prompt from LangChain Hub: {prompt_handle}")
         client = Client()
         prompt = client.pull(prompt_handle)
+        if isinstance(prompt, str):
+            prompt = loads(prompt)
         return prompt
     except Exception as e:
         logger.warning(f"Failed to pull prompt '{prompt_handle}' from Hub: {e}. Using fallback prompt.")

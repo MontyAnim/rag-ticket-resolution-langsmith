@@ -29,7 +29,7 @@ class Settings(BaseSettings):
     LANGSMITH_API_KEY: str | None = None
     LANGSMITH_PROJECT: str = "Rag-Ops Support Engine"
     LANGCHAIN_PROJECT: str = "Rag-Ops Support Engine"
-    LANGCHAIN_HUB_PROMPT: str = "rag-ops/support-agent-prompt"
+    LANGCHAIN_HUB_PROMPT: str = "support-agent-prompt"
     
     model_config = SettingsConfigDict(
         case_sensitive=True,

@@ -8,6 +8,7 @@ load_dotenv()
 class Settings(BaseSettings):
     PROJECT_NAME: str = "FastAPI Backend"
     VERSION: str = "0.1.0"
+    ENVIRONMENT: str = "development"
     API_V1_STR: str = "/api/v1"
     
     # CORS config
@@ -23,6 +24,8 @@ class Settings(BaseSettings):
     # LLMs
     OPENAI_API_KEY: str | None = None
     GROQ_API_KEY: str | None = None
+    LLM_PROVIDER: str = "openai"
+    LLM_MODEL_NAME: str = "gpt-4o-mini"
     # LangSmith Observability
     LANGSMITH_TRACING: str = "false"
     LANGSMITH_ENDPOINT: str = "https://api.smith.langchain.com"

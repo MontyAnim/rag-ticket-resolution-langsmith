@@ -7,6 +7,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from src.agent.graph import get_agent_graph
 from src.agent.checkpointer import get_checkpointer
 from src.core.database import get_db
+from src.core.config import settings
 from src.models.ticket import Ticket
 
 router = APIRouter(prefix="/tickets", tags=["tickets"])
@@ -40,11 +41,16 @@ async def process_ticket(payload: TicketRequest, db: AsyncSession = Depends(get_
         "metadata": {
             "tenant_id": payload.tenant_id,
             "user_id": payload.user_id,
-            "thread_id": thread_id
+            "thread_id": thread_id,
+            "ls_provider": settings.LLM_PROVIDER,
+            "ls_model_name": settings.LLM_MODEL_NAME,
+            "backend_version": settings.VERSION
         },
         "tags": [
             f"tenant:{payload.tenant_id}",
-            "source:api"
+            "source:api",
+            f"env:{settings.ENVIRONMENT}",
+            "tool:support_agent"
         ]
     }
     

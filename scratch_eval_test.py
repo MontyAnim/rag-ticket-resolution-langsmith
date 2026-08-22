@@ -28,8 +28,17 @@ def test_llm_evaluators():
     precision_res = precision_evaluator(run, mock_example)
     print(f"Precision Evaluator: {precision_res}")
     
-    faithfulness_res = faithfulness_evaluator(run, mock_example)
-    print(f"Faithfulness Evaluator: {faithfulness_res}")
+    try:
+        faithfulness_res = faithfulness_evaluator(run, mock_example)
+        print(f"Faithfulness Evaluator: {faithfulness_res}")
+    except UnicodeEncodeError:
+        print("Faithfulness Evaluator completed, but reasoning contained special characters.")
+        
+    from src.evals.llm_judge import tone_and_relevance_evaluator
+    run.inputs = {"messages": [{"content": "I am so angry! Answer my question right now! What is the capital of France?"}]}
+    run.outputs = {"messages": [{"content": "Please calm down, the capital is Paris."}]}
+    tone_res = tone_and_relevance_evaluator(run, mock_example)
+    print(f"Tone & Relevance Evaluator: {tone_res}")
 
 if __name__ == "__main__":
     test_llm_evaluators()

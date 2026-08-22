@@ -79,3 +79,44 @@ def faithfulness_evaluator(run: Run, example: Example) -> Dict[str, Any]:
         "score": result.score,
         "comment": result.reasoning
     }
+
+TONE_RELEVANCE_PROMPT = ChatPromptTemplate.from_messages([
+    ("system", "You are an impartial judge evaluating a customer support agent's response.\n"
+               "Your task is to determine two things:\n"
+               "1. Did the agent address the user's primary question or issue? (Relevance)\n"
+               "2. Is the agent's tone professional, polite, and free of condescension or toxicity? (Tone)\n"
+               "Score 1.0 if the response is both relevant and maintains a polite/professional tone.\n"
+               "Score 0.0 if the response fails to address the question OR if the tone is toxic/condescending.\n"
+               "Return ONLY your score and reasoning in the requested structured format."),
+    ("human", "User's Query: {user_query}\n\nAgent's Response: {actual}")
+])
+
+def tone_and_relevance_evaluator(run: Run, example: Example) -> Dict[str, Any]:
+    """
+    Evaluates whether the response is relevant to the user's query and maintains a professional tone.
+    """
+    messages = run.outputs.get("messages", []) if run.outputs else []
+    if messages:
+        last_msg = messages[-1]
+        actual_output = last_msg.get("content", "") if isinstance(last_msg, dict) else getattr(last_msg, "content", str(last_msg))
+    else:
+        actual_output = str(run.outputs)
+        
+    user_inputs = run.inputs.get("messages", []) if run.inputs else []
+    if user_inputs:
+        first_msg = user_inputs[0]
+        user_query = first_msg.get("content", "") if isinstance(first_msg, dict) else getattr(first_msg, "content", str(first_msg))
+    else:
+        user_query = str(run.inputs)
+    
+    chain = TONE_RELEVANCE_PROMPT | judge_llm
+    result: EvalResult = chain.invoke({
+        "user_query": user_query,
+        "actual": actual_output
+    })
+    
+    return {
+        "key": "tone_and_relevance",
+        "score": result.score,
+        "comment": result.reasoning
+    }

@@ -13,7 +13,18 @@ async def react_node(state: AgentState, config: RunnableConfig | None = None) ->
     and returns response messages to update the conversation state.
     """
     llm = get_llm(temperature=0.0)
-    llm_with_tools = llm.bind_tools(TOOLS)
+    
+    # Dynamically extract provider and model for FinOps tracking
+    provider = "groq" if "Groq" in type(llm).__name__ else "openai"
+    model_name = getattr(llm, "model_name", "unknown")
+    
+    # Immutable injection via with_config
+    llm_with_tools = llm.bind_tools(TOOLS).with_config(
+        metadata={
+            "ls_provider": provider,
+            "ls_model_name": model_name
+        }
+    )
     
     system_prompt = SystemMessage(
         content=(

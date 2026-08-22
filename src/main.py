@@ -12,6 +12,7 @@ from src.core.config import settings
 from src.core.vector_db import qdrant_client
 from src.core.telemetry import setup_telemetry
 from src.api.routes.tickets import router as tickets_router
+from src.api.routes.feedback import router as feedback_router
 
 # Initialize telemetry globally
 setup_telemetry()
@@ -57,4 +58,5 @@ async def health_check():
 
 # Include API Routers
 app.include_router(tickets_router, prefix=settings.API_V1_STR)
+app.include_router(feedback_router, prefix=settings.API_V1_STR, tags=["feedback"])
 

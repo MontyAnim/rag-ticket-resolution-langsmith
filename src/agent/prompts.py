@@ -1,5 +1,5 @@
 import logging
-from langchainhub import Client
+from langsmith import Client
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.messages import SystemMessage
 from langchain_core.load import loads
@@ -27,10 +27,10 @@ def get_react_prompt() -> ChatPromptTemplate:
     prompt_handle = settings.LANGCHAIN_HUB_PROMPT
     
     try:
-        # Client().pull returns a ChatPromptTemplate
+        # Client().pull_prompt returns a ChatPromptTemplate
         logger.info(f"Attempting to pull prompt from LangChain Hub: {prompt_handle}")
         client = Client()
-        prompt = client.pull(prompt_handle)
+        prompt = client.pull_prompt(prompt_handle)
         if isinstance(prompt, str):
             prompt = loads(prompt)
         return prompt

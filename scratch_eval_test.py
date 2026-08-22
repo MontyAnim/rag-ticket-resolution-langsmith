@@ -1,8 +1,10 @@
+import asyncio
 from langsmith import Client
-from src.evals.heuristic import latency_evaluator, tokens_evaluator
+from langsmith.schemas import Example
+from src.evals.llm_judge import precision_evaluator, faithfulness_evaluator
 from src.core.config import settings
 
-def test_evaluators():
+def test_llm_evaluators():
     client = Client()
     runs = list(client.list_runs(project_name="Rag-Ops Support Engine", limit=1))
     if not runs:
@@ -11,15 +13,23 @@ def test_evaluators():
         
     run = runs[0]
     
-    # We pass None for the Example object since the heuristic evaluators
-    # don't actually need it for this simple implementation.
+    # Let's mock the run outputs to ensure there's something to evaluate
+    run.outputs = {"messages": [{"content": "I don't have enough context to answer that."}]}
+    
+    mock_example = Example(
+        id="11111111-1111-1111-1111-111111111111",
+        dataset_id="00000000-0000-0000-0000-000000000000",
+        inputs={},
+        outputs={"expected_behavior": "Agent should gracefully admit lack of context, avoid hallucinating solutions, and recommend escalating to Level 2 support."}
+    )
+    
     print(f"Testing Run ID: {run.id}")
     
-    latency_res = latency_evaluator(run, None)
-    print(f"Latency Evaluator: {latency_res}")
+    precision_res = precision_evaluator(run, mock_example)
+    print(f"Precision Evaluator: {precision_res}")
     
-    tokens_res = tokens_evaluator(run, None)
-    print(f"Tokens Evaluator: {tokens_res}")
+    faithfulness_res = faithfulness_evaluator(run, mock_example)
+    print(f"Faithfulness Evaluator: {faithfulness_res}")
 
 if __name__ == "__main__":
-    test_evaluators()
+    test_llm_evaluators()

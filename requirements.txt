@@ -14,3 +14,5 @@ langchain-groq
 langchain-huggingface
 sentence-transformers
 langsmith
+langchainhub
+langchain

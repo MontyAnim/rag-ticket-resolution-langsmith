@@ -1,5 +1,9 @@
 from pydantic_settings import BaseSettings, SettingsConfigDict
 from typing import List
+from dotenv import load_dotenv
+
+# Load .env into os.environ so LangChain's internal tracer can pick it up
+load_dotenv()
 
 class Settings(BaseSettings):
     PROJECT_NAME: str = "FastAPI Backend"
@@ -19,11 +23,13 @@ class Settings(BaseSettings):
     # LLMs
     OPENAI_API_KEY: str | None = None
     GROQ_API_KEY: str | None = None
-    
     # LangSmith Observability
-    LANGCHAIN_TRACING_V2: str = "false"
-    LANGCHAIN_API_KEY: str | None = None
-    LANGCHAIN_PROJECT: str = "rag-ticket-resolution"
+    LANGSMITH_TRACING: str = "false"
+    LANGSMITH_ENDPOINT: str = "https://api.smith.langchain.com"
+    LANGSMITH_API_KEY: str | None = None
+    LANGSMITH_PROJECT: str = "Rag-Ops Support Engine"
+    LANGCHAIN_PROJECT: str = "Rag-Ops Support Engine"
+    LANGCHAIN_HUB_PROMPT: str = "rag-ops/support-agent-prompt"
     
     model_config = SettingsConfigDict(
         case_sensitive=True,
